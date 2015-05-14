@@ -1,0 +1,28 @@
+<html>
+<head>
+    <title>Gigya User Management Test</title>
+
+	<!-- Step 1 - Including the gigya.js script: -->
+    <script type="text/javascript" src="http://cdn.gigya.com/JS/gigya.js?apiKey=3_oI5t8zPnFkKnFG4AS6vgLhMRvqyWVKfFYmUUBo1Zidjdp0e1iHjVjkPbsTvykiJ3&lang=es-mx" >
+    // Step 2 - Define a global configuration object:    
+    { 
+		lang: "es-mx"
+    }
+    </script>
+
+</head>
+<body>
+
+<script> 
+gigya.accounts.showScreenSet({screenSet:'Registracion-Barcel'});
+	
+	function onLogout(response) {   
+		if ( response.errorCode == 0 ) {                
+			alert('You are now logged out'); 
+		} 
+		else { 
+			alert('Error :' + response.errorMessage); 
+		} 
+	}
+</script>
+</body></html>

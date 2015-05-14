@@ -1,0 +1,184 @@
+<!--
+=============	TSN GIGYA COOKBOOK  ==================
+*
+*
+*	Please use these code examples to integrate gigya single sign on and social share into the your site. 
+*
+*	This demo is currently set up to use the QA API hosted on gigya. Please see the list below for the approprate API KEY
+*
+*	QA Gigya API : 3_PzNwMEMUYcK9WFfYmOwlmN5AiAXN5dWJZeYr8lGvdGOEh_aJAa0uiteRkb5sIiL3
+*
+*	Production TSN API : 3_gpu8tEExJ3NwkC3JBauhmwpSnxjpwIZS6dVYvEE8z5OsuB2_Tv0887PQhh4cZobY
+*
+*	Global Secret Key : DVUKa9GjLS7UoFkpPk733vIMZuF5jFXMUikkQ5qQyPY=
+*	
+*	
+*
+*	To view the full Gigya documetation please visit: http://developers.gigya.com/
+*
+*
+*
+=======================================================
+--> 
+
+
+
+<!DOCTYPE html>
+<html>
+	<head>
+
+		<title>Gigya User Management Test</title>
+
+        <!-- Jquery ui -->
+       	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+		<!-- First import the gigya socialize javascript API --> 
+		<script type="text/javascript" lang="javascript"
+			src="http://cdn.gigya.com/JS/socialize.js?apikey=3_oI5t8zPnFkKnFG4AS6vgLhMRvqyWVKfFYmUUBo1Zidjdp0e1iHjVjkPbsTvykiJ3&lang=es-mx">
+		</script>
+
+
+	</head>
+	<body>
+		
+
+		<!-- 
+			EXAMPLE ONE: Login and registration
+			The first step is to display login and registration links on the page. 
+			Gigya uses onclick attributes to call parts of its api. You will need to specify what screen set to use in the gigya.accounts.showScreenSet function call.
+			The screen sets are created using the gigya UI builder within the gigya platform. 
+			The screen sets are hosted by gigya. They contain the rules, social login options and required fields for account creation on your site. 
+			The code below is all that you need to have users create a profile on your site.
+		--> 
+		<h3>Step one: Login</h3>
+		<!-- to envoke the login or registration pop ups please use the code below --> 
+		<a href="#" onclick="gigya.accounts.showScreenSet({screenSet:'Registracion-Barcel'});">Login</a>&nbsp;&nbsp;|&nbsp;&nbsp; 
+		<a href="#" onclick="gigya.accounts.showScreenSet({screenSet:'Registracion-Barcel', startScreen:'Registration'});">Register</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		<br />
+		<br />
+		<br />
+
+
+
+
+
+		<!-- 
+			EXAMPLE TWO: Pulling information to use on the site 
+			** please skip this example if you do not need to pull user information IE: you are using gigya to drive newsletter signups only ** 
+			
+			In this example we are using the gigya.accounts.getAccountInfo function to display some simple user information to the screen. 
+			For full docuemtation on the Gigya API please see: http://developers.gigya.com/020_Client_API
+		--> 
+		<h3>Step two: Use the gigya javascript api to view/check logged in users details</h3>
+
+		<script type="text/javascript">
+			function getAccountInfoResponseUID(response)
+			{
+			    if ( response.errorCode == 0 ) {            
+			        
+			        var profile = response['profile'];
+			        var UID = response['UID'];
+			        var firstName = profile['firstName'];
+			        var lastName = profile['lastName'];
+			        var address = profile['address'];
+			        var city = profile['city'];
+			        var state = profile['state'];
+			        var postalCode = profile['zip'];
+			        var UID = UID;
+			        var email = profile['firstName'];
+			        var thumbnailURL = profile['thumbnailURL'];
+			        var photoURL = profile['photoURL'];
+					
+			        var msg =  UID + ' <br /> ' + firstName + ' ' + lastName + ' <br /> ' + address + ' <br /> ' + city + ' <br /> ' + postalCode + ' <br /> ' + email + ' <br /> ' + '<img src="' + thumbnailURL + '" /> ' + ' <br /> ' + '<img src="' + photoURL + '" /> '; 
+			        
+			        $('.gigya_message_js').html(msg);
+			    }
+			    else {
+			         $('.gigya_message_js').html("No user yet. Please sign up!");
+			    }    
+			}
+		</script>
+
+
+		<div class="see_gigya_account" onclick="gigya.accounts.getAccountInfo({ callback: getAccountInfoResponseUID });">Click Here to see your login info </div>
+		<div class="gigya_message_js"></div>
+
+
+		<br />
+		<br />
+		<br />
+
+
+
+
+
+		<!-- 
+			EXAMPLE THREE: Edit your profile
+			In addition to the registration User Interface Gigya also prvides an edit profile UI. This ui is can have additional fields. 
+			For example this is a great place to host the TSN prefrence center because it can accomodate a larger page more easily.
+		--> 
+		<h3>Step three: Edit your profile</h3>
+
+		<a href="#" onclick="gigya.accounts.showScreenSet({screenSet:'TSN-Preference-Center-web', mobileScreenSet:'TSN-Preference-Center-mobile'});">Edit Your Profile</a>&nbsp;&nbsp;&nbsp;&nbsp;
+		
+		<br />
+		<br />
+		<br />
+		
+
+		<h3>Step four: scoical share</h3>
+		
+		<script type="text/javascript">	
+			// Constructing a UserAction Object
+			var act = new gigya.socialize.UserAction();
+			act.setTitle("Awesome Slap shot video!");  // Setting the Title
+			act.setLinkBack("http://www.TSN.ca");  // Setting the Link Back
+			act.setDescription("Jeff Finger totally hammers an awesome goal!...");   // Setting Description
+			act.addActionLink("Read More", "http://www.TSN.ca");  // Adding Action Link
+			// Adding a Media (image)
+			act.addMediaItem( { type: 'image', src: 'http://gigya.com/site/images/bsAPI/gs_logo.jpg', href: 'http://www.gigya.com/site/content/socialize.aspx' });
+						
+			
+			function showShareOnPage(){
+		
+				// Show the "Share" dialog
+				var params = 
+				{
+				    userAction:act
+				    ,showMoreButton: true // Enable the "More" button and screen
+				    ,showEmailButton: true // Enable the "Email" button and screen
+				};
+				gigya.socialize.showShareUI(params);
+			
+			}
+		</script>
+		<a href="#" onclick="showShareOnPage();" >Share</a>
+
+		<br />
+		<br />
+		<br />
+		
+
+		<!-- 
+			FINAL EXAMPLE: quick logout 
+			
+		--> 
+
+		<h3>Final example: Logout</h3>
+		<a href="#" onclick="gigya.accounts.logout({callback:onLogout});">Logout</a>&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+		<script>
+			function onLogout(response) {   
+				if ( response.errorCode == 0 ) {                
+					alert('You are now logged out'); 
+				} 
+				else { 
+					alert('Error :' + response.errorMessage); 
+				} 
+			}
+		</script>
+
+	</body>
+</html>
